@@ -1,0 +1,20 @@
+/vendor/
+/node_modules/
+/.env
+/storage/*.key
+npm-debug.log
+.cache/
+.npm/
+
+# Ignore runtime data but keep folders
+.docker/db/data/*
+!.docker/db/data/.gitkeep
+
+.docker/db/sql/*
+!.docker/db/sql/.gitkeep
+
+.docker/phpmyadmin/sessions/*
+!.docker/phpmyadmin/sessions/.gitkeep
+
+.docker/redis/data/*
+!.docker/redis/data/.gitkeep
