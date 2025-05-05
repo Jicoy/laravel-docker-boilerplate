@@ -1,46 +1,23 @@
-APP_NAME=laravel-app
+APP_NAME=my-laravel-app
+DOCKER_REPO=https://github.com/fglend/laravel-docker-boilerplate.git
 
 init:
-	@echo "🔧 Creating Laravel project inside '$(APP_NAME)'..."
-	docker run --rm -v $(PWD):/app composer create-project laravel/laravel $(APP_NAME)
+        @echo "🎯 Creating new Laravel project in '$(APP_NAME)'..."
+        docker run --rm -v $(PWD):/app composer create-project laravel/laravel $(APP_NAME)
 
-	@echo "🔐 Fixing file ownership..."
-	sudo chown -R $$(id -u):$$(id -g) $(APP_NAME)
+        @echo "🔐 Fixing permissions..."
+        sudo chown -R $$(id -u):$$(id -g) $(APP_NAME)
 
-	@echo "📂 Moving Laravel project to root..."
-	mv $(APP_NAME)/* $(APP_NAME)/.env.example . 2>/dev/null || true
-	mv $(APP_NAME)/.* . 2>/dev/null || true
-	rm -rf $(APP_NAME)
+        @echo "📦 Cloning Docker boilerplate into temporary folder..."
+        git clone $(DOCKER_REPO) tmp-docker
 
-	@echo "🐳 Building Docker containers..."
-	docker compose build
+        @echo "📂 Copying Docker files into Laravel project..."
+        mv tmp-docker/.docker $(APP_NAME)/
+        mv tmp-docker/docker-compose.yml $(APP_NAME)/
+        [ -f tmp-docker/Makefile ] && mv tmp-docker/Makefile $(APP_NAME)/ || true
 
-	@echo "🚀 Starting Docker containers..."
-	docker compose up -d
+        @echo "🧹 Cleaning up..."
+        rm -rf tmp-docker
 
-	@echo "📦 Installing composer dependencies..."
-	docker compose exec php composer install
-
-	@echo "🔑 Generating Laravel application key..."
-	docker compose exec php php artisan key:generate
-
-	@echo "✅ Laravel is ready at: http://localhost"
-
-bash:
-	docker compose exec php bash
-
-npm-install:
-	docker compose exec php npm install
-
-npm-build:
-	docker compose exec php npm run build
-
-down:
-	docker compose down
-
-rebuild:
-	docker compose down -v
-	docker compose up -d --build
-
-logs:
-	docker compose logs -f
+        @echo "🚀 Laravel project with Docker is ready in '$(APP_NAME)'"
+        @echo "👉 cd $(APP_NAME) && docker compose up -d"
