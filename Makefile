@@ -1,18 +1,30 @@
 APP_NAME=laravel-app
 
 init:
-	@echo "🔧 Creating Laravel project in current directory..."
+	@echo "🔧 Creating Laravel project inside '$(APP_NAME)'..."
 	docker run --rm -v $(PWD):/app composer create-project laravel/laravel $(APP_NAME)
-	mv $(APP_NAME)/* $(APP_NAME)/.env.example . && rm -rf $(APP_NAME)
-	@echo "📦 Building Docker containers..."
+
+	@echo "🔐 Fixing file ownership..."
+	sudo chown -R $$(id -u):$$(id -g) $(APP_NAME)
+
+	@echo "📂 Moving Laravel project to root..."
+	mv $(APP_NAME)/* $(APP_NAME)/.env.example . 2>/dev/null || true
+	mv $(APP_NAME)/.* . 2>/dev/null || true
+	rm -rf $(APP_NAME)
+
+	@echo "🐳 Building Docker containers..."
 	docker compose build
-	@echo "🚀 Starting containers..."
+
+	@echo "🚀 Starting Docker containers..."
 	docker compose up -d
-	@echo "🎹 Installing composer dependencies..."
+
+	@echo "📦 Installing composer dependencies..."
 	docker compose exec php composer install
-	@echo "🔐 Generating app key..."
+
+	@echo "🔑 Generating Laravel application key..."
 	docker compose exec php php artisan key:generate
-	@echo "✅ Laravel is ready at http://localhost"
+
+	@echo "✅ Laravel is ready at: http://localhost"
 
 bash:
 	docker compose exec php bash
