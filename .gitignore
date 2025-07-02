@@ -18,3 +18,5 @@ npm-debug.log
 
 .docker/redis/data/*
 !.docker/redis/data/.gitkeep
+
+src

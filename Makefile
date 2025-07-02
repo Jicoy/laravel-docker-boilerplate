@@ -5,9 +5,9 @@ DB_CONTAINER=app-db
 
 create:
 	docker run --rm \
-	  -v $(PWD):/var/www \
+	  -v $(PWD)/..:/var/www \
 	  -w /var/www \
-	  composer create-project laravel/laravel . "^12.0"
+	  composer create-project laravel/laravel $(PROJECT_NAME) "^12.0"
 
 # Build and start Docker containers
 up:

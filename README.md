@@ -3,11 +3,11 @@
 ### List of Commands
 
 ```
-make up                  # Start Docker
-make composer-install    # Install PHP dependencies
-make npm-install         # Install Node/Vite dependencies
-make setup               # Prepare Laravel environment
-make migrate             # Run DB migrations
-make vite                # Start Vite dev server (localhost:5173)
-make serve               # Visit site in browser
+make create – Create Laravel 12 in src/
+make up – Build & run Docker containers
+make wait – Small delay to let DB and app settle
+make composer-install – Install PHP dependencies
+make npm-install – Install & build JS/Vite assets
+make setup – Generate .env, app key, and fix permissions
+make migrate – Run database migrations
 ```
